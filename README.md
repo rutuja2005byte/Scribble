@@ -2,6 +2,8 @@
 
 Scribble is a real-time multiplayer drawing and guessing game where players sketch words, make guesses, and compete to achieve the highest score.
 
+![Scribble Preview](./img.png)
+
 ## Features
 
 - Real-time drawing canvas
