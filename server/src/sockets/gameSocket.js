@@ -3,7 +3,7 @@ import {
   buildPublicRoom,
   createRoom,
   getRoom,
-  getRoomBySocket,
+  joinRoom,
   removePlayer
 } from '../game/roomStore.js';
 import {
@@ -38,7 +38,7 @@ export function registerGameSocket(io) {
         return;
       }
 
-      const result = joinExistingRoom(roomCode, socket.id, cleanName);
+      const result = joinRoom({ roomCode, socketId: socket.id, username: cleanName });
 
       if (result.error) {
         callback?.({ ok: false, error: result.error });
@@ -136,30 +136,6 @@ export function registerGameSocket(io) {
       }
     });
   });
-}
-
-function joinExistingRoom(roomCode, socketId, username) {
-  const normalizedCode = String(roomCode || '').trim().toUpperCase();
-  const room = getRoom(normalizedCode);
-
-  if (!room) {
-    return { error: 'Room not found.' };
-  }
-
-  if (room.status !== 'lobby') {
-    return { error: 'This game is already in progress.' };
-  }
-
-  const player = {
-    id: socketId,
-    username,
-    score: 0,
-    isHost: false,
-    guessed: false
-  };
-
-  room.players.push(player);
-  return { room, player };
 }
 
 function sanitizeUsername(username) {
